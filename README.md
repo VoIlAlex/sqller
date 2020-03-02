@@ -20,79 +20,6 @@ To install the package type the following in your terminal:
 sudo pip install sqller
 ```
 
-## Usage
-
-### Model definition
-
-Example of model definition.
-
-```python
-class Chat(metaclass=ModelMeta):
-    NAME = 'chats'
-    FIELDS = [
-        Field(name="id", dtype="integer", postfix="PRIMARY KEY"),
-        Field(name="type", dtype="text"),
-        Field(name="last_name", dtype="text"),
-        Field(name="first_name", dtype="text"),
-        Field(name="username", dtype="text")
-    ]
-```
-
-It will generate constructor and sql returning methods.
-
-### Data Access Object (DAO) definition
-
-Example of DAO definition.
-
-```python
-class ChatDAO(metaclass=DAOMeta):
-    MODEL = Chat
-
-```
-
-It will generate static methods to generate sql text for accessing fields in `Chat` table.
-
-### Service definition
-
-Example of Service definition.
-
-```python
-class TelegramService(metaclass=ServiceMeta):
-    DB_PATH = 'telegram.db'
-    MODELS = [
-        models.Chat,
-        models.SelectedCriterion
-    ]
-
-    @staticmethod
-    def connect() -> sqlite3.Connection: ...
-
-    @staticmethod
-    def save_predefined_chat():
-        connection = TelegramService.connect()
-        obj = Chat(
-            id=0,
-            type='usual',
-            last_name='Vouk',
-            first_name='Ilya',
-            username='voilalex'
-        )
-        sql_save = ChatDAO.sql_save(obj)
-        cursor = connection.cursor()
-        cursor.execute(sql_save)
-        result = cursor.fetchall()
-        print(result)
-        connection.commit()
-```
-
-It will automatically generate database with the name defined in `DB_PATH` constant with all the required tables and create connect function to connect to that database.
-
-### Service Usage
-
-```python
-TelegramService.save_predefined_chat()
-```
-
 ## Running the tests
 
 To run tests type the following in your terminal:
@@ -119,7 +46,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-- **Ilya Vouk** - _Initial work_ - [VoIlAlex](https://github.com/VoIlAlex)
+- **Ilya Vouk** - Initial work - [VoIlAlex](https://github.com/VoIlAlex)
 
 See also the list of [contributors](https://github.com/VoIlAlex/sqller/contributors) who participated in this project.
 
