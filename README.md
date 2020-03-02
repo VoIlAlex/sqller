@@ -8,6 +8,12 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Installing
 
+At first, you need SQLite3 to be installed. Type following in your terminal:
+
+```bash
+apt-get install libsqlite3-dev
+```
+
 To install the package type the following in your terminal:
 
 ```bash
@@ -80,6 +86,12 @@ class TelegramService(metaclass=ServiceMeta):
 ```
 
 It will automatically generate database with the name defined in `DB_PATH` constant with all the required tables and create connect function to connect to that database.
+
+### Service Usage
+
+```python
+TelegramService.save_predefined_chat()
+```
 
 ## Running the tests
 
