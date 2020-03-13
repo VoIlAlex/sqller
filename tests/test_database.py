@@ -287,3 +287,20 @@ class TestDatabaseUtils:
 
         assert ChatDAO.sql_update(
             obj) == "UPDATE chats SET type='usual', last_name='Vouk', first_name='Ilya', username='voilalex'\nWHERE id=0"
+
+    def test_dao_sql_delete_by_id(self):
+        class Chat(metaclass=utils.ModelMeta):
+            NAME = 'chats'
+            FIELDS = [
+                utils.Field(name="id", dtype="integer",
+                            postfix="PRIMARY KEY"),
+                utils.Field(name="type", dtype="text"),
+                utils.Field(name="last_name", dtype="text"),
+                utils.Field(name="first_name", dtype="text"),
+                utils.Field(name="username", dtype="text")
+            ]
+
+        class ChatDAO(metaclass=utils.DAOMeta):
+            MODEL = Chat
+
+        assert ChatDAO.sql_delete_by_id(1) == 'DELETE FROM chats\nWHERE id=1'

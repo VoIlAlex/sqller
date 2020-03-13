@@ -214,6 +214,14 @@ class DAOMeta(type):
             return sql_query_start + sql_query_end
         cls.sql_update = sql_update
 
+    @staticmethod
+    def __generate_delete_by_id(cls, name, bases, dct):
+        @staticmethod
+        def sql_delete_by_id(id: int) -> str:
+            sql_query = f"DELETE FROM {dct['MODEL'].NAME}\nWHERE id={id}"
+            return sql_query
+        cls.sql_delete_by_id = sql_delete_by_id
+
 
 class ServiceMeta(type):
     def __new__(cls, name, bases, dct):
