@@ -98,8 +98,8 @@ class TestDatabaseUtils:
                 utils.Field(name="username", dtype="text")
             ]
 
-        class ChatDAO(metaclass=utils.generateDAOMeta(model=Chat)):
-            pass
+        class ChatDAO(metaclass=utils.DAOMeta):
+            MODEL = Chat
 
     def test_dao_sql_get_one(self):
         class Chat(metaclass=utils.ModelMeta):
@@ -113,8 +113,8 @@ class TestDatabaseUtils:
                 utils.Field(name="username", dtype="text")
             ]
 
-        class ChatDAO(metaclass=utils.generateDAOMeta(model=Chat)):
-            pass
+        class ChatDAO(metaclass=utils.DAOMeta):
+            MODEL = Chat
 
         assert ChatDAO.sql_get_one(
             0) == 'SELECT * FROM chats\nWHERE id = 0\nLIMIT 1;'
@@ -131,8 +131,8 @@ class TestDatabaseUtils:
                 utils.Field(name="username", dtype="text")
             ]
 
-        class ChatDAO(metaclass=utils.generateDAOMeta(model=Chat)):
-            pass
+        class ChatDAO(metaclass=utils.DAOMeta):
+            MODEL = Chat
 
         assert ChatDAO.sql_find_all() == 'SELECT * FROM chats;'
 
@@ -148,8 +148,8 @@ class TestDatabaseUtils:
                 utils.Field(name="username", dtype="text")
             ]
 
-        class ChatDAO(metaclass=utils.generateDAOMeta(model=Chat)):
-            pass
+        class ChatDAO(metaclass=utils.DAOMeta):
+            MODEL = Chat
 
         obj = Chat(
             type='usual',
@@ -198,7 +198,8 @@ class TestDatabaseUtils:
                 utils.Field(name="username", dtype="text")
             ]
 
-        class ChatDAO(metaclass=utils.generateDAOMeta(model=Chat)):
+        class ChatDAO(metaclass=utils.DAOMeta):
+            MODEL = Chat
             sql_find_all_by_type = utils.CustomQuery()
 
         assert ChatDAO.sql_find_all_by_type(
@@ -216,8 +217,35 @@ class TestDatabaseUtils:
                 utils.Field(name="username", dtype="text")
             ]
 
-        class ChatDAO(metaclass=utils.generateDAOMeta(model=Chat)):
+        class ChatDAO(metaclass=utils.DAOMeta):
+            MODEL = Chat
             custom_find = utils.CustomQuery(
                 "SELECT * FROM chats WHERE last_name = Vouk")
 
         assert ChatDAO.custom_find() == "SELECT * FROM chats WHERE last_name = Vouk"
+
+    def test_dao_sql_update(self):
+        class Chat(metaclass=utils.ModelMeta):
+            NAME = 'chats'
+            FIELDS = [
+                utils.Field(name="id", dtype="integer",
+                            postfix="PRIMARY KEY"),
+                utils.Field(name="type", dtype="text"),
+                utils.Field(name="last_name", dtype="text"),
+                utils.Field(name="first_name", dtype="text"),
+                utils.Field(name="username", dtype="text")
+            ]
+
+        class ChatDAO(metaclass=utils.DAOMeta):
+            MODEL = Chat
+
+        obj = Chat(
+            id=0,
+            type='usual',
+            last_name='Vouk',
+            first_name='Ilya',
+            username='voilalex'
+        )
+
+        assert ChatDAO.sql_update(
+            obj) == "UPDATE chats SET type='usual', last_name='Vouk', first_name='Ilya', username='voilalex'\nWHERE id=0"

@@ -190,6 +190,24 @@ class DAOMeta(type):
                 else:
                     raise ConventionViolationError
 
+    @staticmethod
+    def __generate_update(cls, name, bases, dct):
+        @staticmethod
+        def sql_update(obj: dct['MODEL']) -> str:
+            sql_query_start = f"UPDATE {dct['MODEL'].NAME} SET "
+            sql_query_end = f"\nWHERE id="
+            for field in dct['MODEL'].FIELDS:
+                field_value = getattr(obj, field.name)
+                if field_value is not ... and field.name != 'id':
+                    if not sql_query_start.endswith('SET '):
+                        sql_query_start += ', '
+                    sql_query_start += f'{field.name}='
+                    sql_query_start += f'{field_value}' if field.dtype != 'text' else f"'{field_value}'"
+                elif field.name == 'id':
+                    sql_query_end += str(field_value)
+            return sql_query_start + sql_query_end
+        cls.sql_update = sql_update
+
 
 class ServiceMeta(type):
     def __new__(cls, name, bases, dct):
