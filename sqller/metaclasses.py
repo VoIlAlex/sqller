@@ -160,7 +160,7 @@ class DAOMeta(type):
                         nonlocal sql_query_template, final_user_lex
                         if len(final_user_lex) != 0:
                             sql_query_template += final_user_lex
-                            sql_query_template += ' = {}'
+                            sql_query_template += ' = {' + final_user_lex + '} '
                             keys.append(final_user_lex)
                             final_user_lex = ''
 
@@ -193,14 +193,24 @@ class DAOMeta(type):
                             final_user_lex += lex
 
                     complete_custom_injection()
+                    sql_query_template = sql_query_template.rstrip()
 
-                    @staticmethod
-                    def sql_custom_query(*args, **kwargs):
-                        sql_query = sql_query_template
-                        for key in keys:
-                            sql_query = sql_query.format(kwargs[key])
-                        return sql_query
-                    setattr(cls, attr_name, sql_custom_query)
+                    def sql_custom_query_factory(sql_query_template, keys):
+                        @staticmethod
+                        def sql_custom_query(*args, **kwargs):
+                            sql_query = sql_query_template
+                            sql_query = sql_query.format(**kwargs)
+                            return sql_query
+                        return sql_custom_query
+
+                    setattr(
+                        cls,
+                        attr_name,
+                        sql_custom_query_factory(
+                            sql_query_template,
+                            keys
+                        )
+                    )
                 elif dct[attr_name].query is not None:
                     @staticmethod
                     def sql_custom_query(*args):
