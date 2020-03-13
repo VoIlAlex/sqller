@@ -130,7 +130,7 @@ class DAOMeta(type):
     def __generate_exists(cls, name, bases, dct):
         @staticmethod
         def sql_exists(obj: dct['MODEL']) -> str:
-            sql_query = f"SELECT count(*) FROM {dct['MODEL'].NAME} "
+            sql_query = f"SELECT count(*) FROM {dct['MODEL'].NAME}"
             i = 0
             for field in dct['MODEL'].FIELDS:
                 if getattr(obj, field.name) is not None and field.name != 'id':
