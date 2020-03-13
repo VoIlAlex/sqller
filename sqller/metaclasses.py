@@ -154,20 +154,24 @@ class DAOMeta(type):
                     sql_query_template = ''
                     lexems = attr_name[4:].split('_')
                     sep = ' '
-                    for lex in lexems:
+                    for i, lex in enumerate(lexems):
                         if lex == 'select' or lex == 'find':
                             sep = ','
                             sql_query_template += 'SELECT '
                         elif lex == 'all':
                             sep = ' '
-                            sql_query_template += '*' + sep
-                            sql_query_template += f"FROM {dct['MODEL'].NAME}" + sep
+                            if lexems[0].upper() != 'DELETE':
+                                sql_query_template += '*' + sep
+                                sql_query_template += f"FROM {dct['MODEL'].NAME}" + sep
                         elif lex == 'by':
                             sep = ' '
                             sql_query_template += 'WHERE' + sep
                         elif lex == 'and':
                             sep = ' '
                             sql_query_template += 'AND' + sep
+                        elif lex == 'delete':
+                            sep = ' '
+                            sql_query_template += f"DELETE FROM {dct['MODEL'].NAME} "
                         else:
                             if sql_query_template[-1] != sep:
                                 sql_query_template += sep
