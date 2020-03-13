@@ -1,3 +1,11 @@
+from .exceptions import SQLError
 from .exceptions import ConventionViolationError
-from .utils import CustomQuery, Field, is_empty_function
-from .metaclasses import ModelMeta, DAOMeta, ServiceMeta
+from .exceptions import CustomSQLBuildError
+
+from .utils import CustomQuery
+from .utils import Field
+from .utils import is_empty_function
+
+from .metaclasses import ModelMeta
+from .metaclasses import DAOMeta
+from .metaclasses import ServiceMeta
