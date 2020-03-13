@@ -1,5 +1,5 @@
 import sqlite3
-from .exceptions import ConventionViolationError
+from .exceptions import ConventionViolationError, CustomSQLBuildError
 from .utils import CustomQuery, Field, is_empty_function
 
 
@@ -159,8 +159,15 @@ class DAOMeta(type):
                     def complete_custom_injection():
                         nonlocal sql_query_template, final_user_lex
                         if len(final_user_lex) != 0:
-                            sql_query_template += final_user_lex
-                            sql_query_template += ' = {' + final_user_lex + '} '
+                            sql_query_template += f"{final_user_lex}"
+                            correspondent_fields = [f for f in dct['MODEL'].FIELDS if f.name == final_user_lex]
+                            if len(correspondent_fields) == 0:
+                                raise CustomSQLBuildError
+                            correspondent_field = correspondent_fields[0]
+                            if correspondent_field.dtype == 'text':
+                                sql_query_template += f" = '{{{final_user_lex}}}' "
+                            else:
+                                sql_query_template += f" = {{{final_user_lex}}} "
                             keys.append(final_user_lex)
                             final_user_lex = ''
 

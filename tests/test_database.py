@@ -1,3 +1,5 @@
+import sqller
+
 import sqller as utils
 import pytest
 
@@ -203,7 +205,7 @@ class TestDatabaseUtils:
             sql_find_all_by_type = utils.CustomQuery()
 
         assert ChatDAO.sql_find_all_by_type(
-            type='usual') == 'SELECT * FROM chats WHERE type = usual'
+            type='usual') == "SELECT * FROM chats WHERE type = 'usual'"
 
     def test_dao_sql_custom_query_anonymous_2(self):
         class Chat(metaclass=utils.ModelMeta):
@@ -222,7 +224,7 @@ class TestDatabaseUtils:
             sql_delete_all_by_type = utils.CustomQuery()
 
         assert ChatDAO.sql_delete_all_by_type(
-            type='usual') == "DELETE FROM chats WHERE type = usual"
+            type='usual') == "DELETE FROM chats WHERE type = 'usual'"
 
     def test_dao_sql_custom_query_anonymous_3(self):
         class Chat(metaclass=utils.ModelMeta):
@@ -241,7 +243,7 @@ class TestDatabaseUtils:
             sql_delete_by_type = utils.CustomQuery()
 
         assert ChatDAO.sql_delete_by_type(
-            type='usual') == "DELETE FROM chats WHERE type = usual"
+            type='usual') == "DELETE FROM chats WHERE type = 'usual'"
 
     def test_dao_sql_custom_query_anonymous_4(self):
         class Chat(metaclass=utils.ModelMeta):
@@ -255,12 +257,10 @@ class TestDatabaseUtils:
                 utils.Field(name="username", dtype="text")
             ]
 
-        class ChatDAO(metaclass=utils.DAOMeta):
-            MODEL = Chat
-            sql_delete_by_type_name = utils.CustomQuery()
-
-        assert ChatDAO.sql_delete_by_type_name(
-            type_name='usual') == "DELETE FROM chats WHERE type_name = usual"
+        with pytest.raises(sqller.exceptions.CustomSQLBuildError):
+            class ChatDAO(metaclass=utils.DAOMeta):
+                MODEL = Chat
+                sql_delete_by_type_name = utils.CustomQuery()
 
     def test_dao_sql_custom_query_anonymous_5(self):
         class Chat(metaclass=utils.ModelMeta):
@@ -279,8 +279,11 @@ class TestDatabaseUtils:
             sql_delete_by_type = utils.CustomQuery()
             sql_find_all_by_last_name_and_first_name = utils.CustomQuery()
 
-        ChatDAO.sql_delete_by_type(type='type')
-        ChatDAO.sql_find_all_by_last_name_and_first_name(first_name='Ilya', last_name='Vouk')
+        assert ChatDAO.sql_delete_by_type(type='type') == "DELETE FROM chats WHERE type = 'type'"
+        assert ChatDAO.sql_find_all_by_last_name_and_first_name(
+            first_name='Ilya',
+            last_name='Vouk'
+        ) == "SELECT * FROM chats WHERE last_name = 'Vouk' AND first_name = 'Ilya'"
 
 
     def test_dao_sql_custom_query_user_provided_1(self):
