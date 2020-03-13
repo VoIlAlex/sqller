@@ -154,29 +154,45 @@ class DAOMeta(type):
                     sql_query_template = ''
                     lexems = attr_name[4:].split('_')
                     sep = ' '
+                    final_user_lex = ''
+
+                    def complete_custom_injection():
+                        nonlocal sql_query_template, final_user_lex
+                        if len(final_user_lex) != 0:
+                            sql_query_template += final_user_lex
+                            sql_query_template += ' = {}'
+                            keys.append(final_user_lex)
+                            final_user_lex = ''
+
                     for i, lex in enumerate(lexems):
                         if lex == 'select' or lex == 'find':
                             sep = ','
+                            complete_custom_injection()
                             sql_query_template += 'SELECT '
                         elif lex == 'all':
                             sep = ' '
+                            complete_custom_injection()
                             if lexems[0].upper() != 'DELETE':
                                 sql_query_template += '*' + sep
                                 sql_query_template += f"FROM {dct['MODEL'].NAME}" + sep
                         elif lex == 'by':
                             sep = ' '
+                            complete_custom_injection()
                             sql_query_template += 'WHERE' + sep
                         elif lex == 'and':
                             sep = ' '
+                            complete_custom_injection()
                             sql_query_template += 'AND' + sep
                         elif lex == 'delete':
                             sep = ' '
+                            complete_custom_injection()
                             sql_query_template += f"DELETE FROM {dct['MODEL'].NAME} "
                         else:
-                            if sql_query_template[-1] != sep:
-                                sql_query_template += sep
-                            sql_query_template += lex + ' = {}'
-                            keys.append(lex)
+                            if len(final_user_lex) != 0:
+                                final_user_lex += '_'
+                            final_user_lex += lex
+
+                    complete_custom_injection()
 
                     @staticmethod
                     def sql_custom_query(*args, **kwargs):

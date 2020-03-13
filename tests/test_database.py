@@ -243,6 +243,25 @@ class TestDatabaseUtils:
         assert ChatDAO.sql_delete_by_type(
             type='usual') == "DELETE FROM chats WHERE type = usual"
 
+    def test_dao_sql_custom_query_anonymous_4(self):
+        class Chat(metaclass=utils.ModelMeta):
+            NAME = 'chats'
+            FIELDS = [
+                utils.Field(name="id", dtype="integer",
+                            postfix="PRIMARY KEY"),
+                utils.Field(name="type", dtype="text"),
+                utils.Field(name="last_name", dtype="text"),
+                utils.Field(name="first_name", dtype="text"),
+                utils.Field(name="username", dtype="text")
+            ]
+
+        class ChatDAO(metaclass=utils.DAOMeta):
+            MODEL = Chat
+            sql_delete_by_type_name = utils.CustomQuery()
+
+        assert ChatDAO.sql_delete_by_type_name(
+            type_name='usual') == "DELETE FROM chats WHERE type_name = usual"
+
     def test_dao_sql_custom_query_user_provided_1(self):
         class Chat(metaclass=utils.ModelMeta):
             NAME = 'chats'
