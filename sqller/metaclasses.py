@@ -321,5 +321,8 @@ class ServiceMeta(type):
             # =====================
             cursor = connection.cursor()
             cursor.execute(sql_query)
-            return cursor.fetchall()
+            result = cursor.fetchall()
+            connection.commit()
+            return result
+
         cls.execute = execute
