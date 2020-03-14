@@ -1,4 +1,6 @@
 import sqlite3
+from typing import Iterable, Tuple
+
 from .exceptions import ConventionViolationError, CustomSQLBuildError
 from .utils import CustomQuery, Field, is_empty_function
 
@@ -294,3 +296,30 @@ class ServiceMeta(type):
                     print(e)
             return connection
         cls.connect = connect
+
+    @staticmethod
+    def __generate_execute(cls, name, bases, dct):
+        @staticmethod
+        def execute(sql_query: str) -> Iterable[Tuple]:
+            # =======================
+            # Connect to the database
+            # =======================
+            connection = None
+            try:
+                connection = sqlite3.connect(dct['DB_PATH'])
+            except sqlite3.Error as e:
+                print(e)
+            if connection is not None:
+                cursor = connection.cursor()
+                for table in dct['MODELS']:
+                    cursor.execute(
+                        table.sql_create_table_if_not_exists())
+                cursor.fetchall()
+
+            # =====================
+            # Execute the sql query
+            # =====================
+            cursor = connection.cursor()
+            cursor.execute(sql_query)
+            return cursor.fetchall()
+        cls.execute = execute
