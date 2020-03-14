@@ -1,16 +1,14 @@
 #!/bin/bash
 
-while 1
+while [ 1 = 1 ]
 do
-  echo "Do you want to push all? [y/n]"
-  read $ANSWER
-  if [ $ANDSWER = 'y' ]
+  read -p "Do you want to push all? [y/n] "  ANSWER
+  if [ $ANSWER = "y" ]
   then
     break
-  fi
-  elif [ $ANSWER = 'n' ]
-  then
-    exit 0
+    elif [ $ANSWER = "n" ]
+    then
+      exit 0
   fi
 done
 
