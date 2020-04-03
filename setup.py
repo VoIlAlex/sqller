@@ -20,7 +20,7 @@ setup(
 
     # Start with a small number and increase it with every change you make
     # https://semver.org
-    version='1.4.1',
+    version='1.4.2',
 
     # Chose a license from here: https://help.github.com/articles/licensing-a-repository
     # For example: MIT
@@ -31,7 +31,7 @@ setup(
 
     # Long description of your library
     long_description=long_description,
-    long_description_context_type='text/markdown',
+    long_description_content_type='text/markdown',
 
     # Your name
     author='Ilya Vouk',
@@ -43,7 +43,7 @@ setup(
     url='https://github.com/VoIlAlex',
 
     # Link from which the project can be downloaded
-    download_url='https://github.com/VoIlAlex/sqller/archive/v1.4.1.tag.gz',
+    download_url='https://github.com/VoIlAlex/sqller/archive/v1.4.2.tag.gz',
 
     # List of keyword arguments
     keywords=['orm', 'sql', 'sqlite', 'query', 'generation'],
