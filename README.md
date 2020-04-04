@@ -1,6 +1,6 @@
 # Sqller
 
-![PyPI - Downloads](https://img.shields.io/pypi/dm/sqller)
+[![Downloads](https://pepy.tech/badge/sqller/month)](https://pepy.tech/project/sqller/month)
 ![PyPI - License](https://img.shields.io/pypi/l/cv2studio)
 
 ORM library to build SQLite based application in format model/dao/service.
