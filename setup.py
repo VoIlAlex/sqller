@@ -40,7 +40,7 @@ setup(
     author_email='ilya.vouk@gmail.com',
 
     # Either the link to your github or to your website
-    url='https://github.com/VoIlAlex',
+    url='https://github.com/VoIlAlex/sqller',
 
     # Link from which the project can be downloaded
     download_url='https://github.com/VoIlAlex/sqller/archive/v1.4.2.tag.gz',
